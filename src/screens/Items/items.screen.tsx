@@ -84,6 +84,7 @@ export const Items = ({ route, navigation }: ItemsProps) => {
         </View>
         <View style={{ width: "15%" }}></View>
       </View>
+
       <View
         style={{
           alignItems: "center",
