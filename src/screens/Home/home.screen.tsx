@@ -14,10 +14,12 @@ export const Home = ({ navigation }: HomeProps) => {
   } = useThemeConsumer();
 
   return (
-    <SafeAreaView style={{ flex: 1, justifyContent: "center" }}>
+    <SafeAreaView style={{ flex: 1 }}>
       <View
         style={{
           alignItems: "center",
+          flex: 1,
+          justifyContent: "center",
         }}
       >
         <TouchableOpacity
@@ -51,6 +53,7 @@ export const Home = ({ navigation }: HomeProps) => {
             alignItems: "center",
             height: 40,
           }}
+          onPress={() => navigation.navigate("Brands")}
         >
           <Text
             style={{
