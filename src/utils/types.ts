@@ -5,6 +5,8 @@ export type RootStackParamList = {
   Theme: undefined;
   Brands: undefined;
   Items: { brandId: number };
+  Basket: undefined;
+  Order: undefined;
 };
 
 export type Brand = {

@@ -3,6 +3,13 @@ import { Item } from "../utils/types";
 import { useThemeConsumer } from "../utils/theme/theme.consumer";
 import { useState } from "react";
 import Entypo from "@expo/vector-icons/Entypo";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  addToBasket,
+  removeFromBasket,
+  selectBasketItemsWithId,
+} from "../redux/basket.slice";
+import { RootState } from "../redux/store";
 
 export const ItemComponent = ({
   id,
@@ -17,6 +24,21 @@ export const ItemComponent = ({
   } = useThemeConsumer();
 
   const [isPressed, setIsPressed] = useState(false);
+  const dispatch = useDispatch();
+  const items = useSelector((state: RootState) =>
+    selectBasketItemsWithId(state, id)
+  );
+
+  const addItemToBasket = () => {
+    dispatch(addToBasket({ id, name, description, price, imageUrl, brand }));
+  };
+
+  const removeItemFromBasket = () => {
+    if (items.length <= 0) return;
+    dispatch(
+      removeFromBasket({ id, name, description, price, imageUrl, brand })
+    );
+  };
 
   return (
     <>
@@ -68,15 +90,18 @@ export const ItemComponent = ({
               paddingBottom: 3,
             }}
           >
-            <TouchableOpacity>
+            <TouchableOpacity
+              disabled={items.length <= 0}
+              onPress={removeItemFromBasket}
+            >
               <Entypo
                 name={"circle-with-minus"}
-                color={colors.medium}
+                color={items.length > 0 ? colors.medium : "gray"}
                 size={40}
               />
             </TouchableOpacity>
-            <Text style={{ marginHorizontal: 5 }}>0</Text>
-            <TouchableOpacity>
+            <Text style={{ marginHorizontal: 5 }}>{items.length}</Text>
+            <TouchableOpacity onPress={addItemToBasket}>
               <Entypo
                 name={"circle-with-plus"}
                 color={colors.medium}

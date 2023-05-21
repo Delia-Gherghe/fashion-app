@@ -5,6 +5,8 @@ import { signOut } from "firebase/auth";
 import type { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { RootStackParamList } from "../../utils/types";
 import { useThemeConsumer } from "../../utils/theme/theme.consumer";
+import { Video, ResizeMode } from "expo-av";
+import { useRef, useEffect } from "react";
 
 type HomeProps = NativeStackScreenProps<RootStackParamList, "Home">;
 
@@ -12,6 +14,12 @@ export const Home = ({ navigation }: HomeProps) => {
   const {
     theme: { colors },
   } = useThemeConsumer();
+
+  const video = useRef<Video>(null);
+
+  useEffect(() => {
+    video.current?.playAsync();
+  }, []);
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
@@ -22,6 +30,14 @@ export const Home = ({ navigation }: HomeProps) => {
           justifyContent: "center",
         }}
       >
+        <Video
+          ref={video}
+          style={{ alignSelf: "center", height: 170, width: 300 }}
+          source={require("../../../assets/fashion_add.mp4")}
+          useNativeControls
+          resizeMode={ResizeMode.CONTAIN}
+          isLooping
+        />
         <TouchableOpacity
           style={{
             width: 150,
@@ -32,8 +48,12 @@ export const Home = ({ navigation }: HomeProps) => {
             justifyContent: "center",
             alignItems: "center",
             height: 40,
+            marginTop: 30,
           }}
-          onPress={() => navigation.navigate("Theme")}
+          onPress={() => {
+            video.current?.pauseAsync();
+            navigation.navigate("Theme");
+          }}
         >
           <Text
             style={{ fontSize: 14, fontWeight: "400", color: colors.textLight }}
@@ -53,7 +73,10 @@ export const Home = ({ navigation }: HomeProps) => {
             alignItems: "center",
             height: 40,
           }}
-          onPress={() => navigation.navigate("Brands")}
+          onPress={() => {
+            video.current?.pauseAsync();
+            navigation.navigate("Brands");
+          }}
         >
           <Text
             style={{
@@ -75,7 +98,10 @@ export const Home = ({ navigation }: HomeProps) => {
             alignItems: "center",
             height: 40,
           }}
-          onPress={() => signOut(auth)}
+          onPress={() => {
+            video.current?.pauseAsync();
+            signOut(auth);
+          }}
         >
           <Text
             style={{ fontSize: 14, fontWeight: "400", color: colors.textDark }}

@@ -5,6 +5,8 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { View, Text, FlatList, TouchableOpacity, Image } from "react-native";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { useState, useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { clearBasket, selectBasketItems } from "../../redux/basket.slice";
 
 type BrandsProps = NativeStackScreenProps<RootStackParamList, "Brands">;
 
@@ -12,6 +14,9 @@ export const Brands = ({ navigation }: BrandsProps) => {
   const {
     theme: { colors },
   } = useThemeConsumer();
+
+  const dispatch = useDispatch();
+  const items = useSelector(selectBasketItems);
 
   const [brands, setBrands] = useState<Brand[]>([]);
   const [error, setError] = useState("");
@@ -69,7 +74,12 @@ export const Brands = ({ navigation }: BrandsProps) => {
         data={brands}
         renderItem={({ item }) => (
           <TouchableOpacity
-            onPress={() => navigation.navigate("Items", { brandId: item.id })}
+            onPress={() => {
+              if (items.length > 0 && items[0]?.brand.id !== item.id) {
+                dispatch(clearBasket());
+              }
+              navigation.navigate("Items", { brandId: item.id });
+            }}
           >
             <View
               style={{
