@@ -6,6 +6,7 @@ import { ThemeChange } from "../screens/ThemeChange/themechange.screen";
 import { Items } from "../screens/Items/items.screen";
 import { Basket } from "../screens/Basket/basket.screen";
 import { Order } from "../screens/Order/order.screen";
+import { Reviews } from "../screens/Reviews/reviews.screen";
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
@@ -26,6 +27,7 @@ export const Shop = () => {
         component={Order}
         options={{ presentation: "fullScreenModal" }}
       />
+      <Stack.Screen name="Reviews" component={Reviews} />
     </Stack.Navigator>
   );
 };

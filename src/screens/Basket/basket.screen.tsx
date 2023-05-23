@@ -17,7 +17,8 @@ type BasketProps = NativeStackScreenProps<RootStackParamList, "Basket">;
 
 type Grouped = { [key: number]: Item[] };
 
-export const Basket = ({ navigation }: BasketProps) => {
+export const Basket = ({ route, navigation }: BasketProps) => {
+  const { brandName } = route.params;
   const items = useSelector(selectBasketItems);
   const dispatch = useDispatch();
   const basketTotal = useSelector(selectBasketTotal);
@@ -53,18 +54,16 @@ export const Basket = ({ navigation }: BasketProps) => {
             >
               Basket
             </Text>
-            {items.length > 0 && (
-              <Text
-                style={{
-                  textAlign: "center",
-                  color: "gray",
-                  fontWeight: "400",
-                  fontSize: 16,
-                }}
-              >
-                {items[0].brand.name}
-              </Text>
-            )}
+            <Text
+              style={{
+                textAlign: "center",
+                color: "gray",
+                fontWeight: "400",
+                fontSize: 16,
+              }}
+            >
+              {brandName}
+            </Text>
           </View>
           <TouchableOpacity
             onPress={navigation.goBack}
@@ -80,7 +79,12 @@ export const Basket = ({ navigation }: BasketProps) => {
         </View>
 
         <ScrollView
-          style={{ borderTopColor: colors.light, borderTopWidth: 0.6 }}
+          style={
+            items.length > 0 && {
+              borderTopColor: colors.light,
+              borderTopWidth: 0.6,
+            }
+          }
         >
           {Object.entries(groupedItemsInBasket).map(([key, items]) => (
             <View

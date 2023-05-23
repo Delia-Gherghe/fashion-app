@@ -1,4 +1,11 @@
-import { View, Text, TouchableOpacity, Image } from "react-native";
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  Image,
+  useAnimatedValue,
+  Animated,
+} from "react-native";
 import { Item } from "../utils/types";
 import { useThemeConsumer } from "../utils/theme/theme.consumer";
 import { useState } from "react";
@@ -10,38 +17,51 @@ import {
   selectBasketItemsWithId,
 } from "../redux/basket.slice";
 import { RootState } from "../redux/store";
+import { useEffect } from "react";
 
 export const ItemComponent = ({
-  id,
-  name,
-  description,
-  price,
-  imageUrl,
-  brand,
-}: Item) => {
+  item,
+  index,
+}: {
+  item: Item;
+  index: number;
+}) => {
   const {
     theme: { colors },
   } = useThemeConsumer();
 
+  const changeOpacity = useAnimatedValue(0);
+
+  const handleOpacityChange = () => {
+    Animated.timing(changeOpacity, {
+      toValue: 1,
+      useNativeDriver: true,
+      delay: 200 * index,
+      duration: 1000,
+    }).start();
+  };
+
   const [isPressed, setIsPressed] = useState(false);
   const dispatch = useDispatch();
   const items = useSelector((state: RootState) =>
-    selectBasketItemsWithId(state, id)
+    selectBasketItemsWithId(state, item.id)
   );
 
   const addItemToBasket = () => {
-    dispatch(addToBasket({ id, name, description, price, imageUrl, brand }));
+    dispatch(addToBasket(item));
   };
 
   const removeItemFromBasket = () => {
     if (items.length <= 0) return;
-    dispatch(
-      removeFromBasket({ id, name, description, price, imageUrl, brand })
-    );
+    dispatch(removeFromBasket(item));
   };
 
+  useEffect(() => {
+    handleOpacityChange();
+  }, []);
+
   return (
-    <>
+    <Animated.View style={{ opacity: changeOpacity }}>
       <TouchableOpacity
         onPress={() => setIsPressed(!isPressed)}
         style={[
@@ -57,17 +77,17 @@ export const ItemComponent = ({
       >
         <View style={{ flexDirection: "row" }}>
           <View style={{ flex: 1, paddingRight: 2 }}>
-            <Text style={{ marginBottom: 1, fontSize: 20 }}>{name}</Text>
+            <Text style={{ marginBottom: 1, fontSize: 20 }}>{item.name}</Text>
             <Text style={{ color: "gray", fontWeight: "400" }}>
-              {description}
+              {item.description}
             </Text>
             <Text style={{ color: "gray", fontWeight: "bold", marginTop: 5 }}>
-              € {price}
+              € {item.price}
             </Text>
           </View>
           <View>
             <Image
-              source={{ uri: imageUrl }}
+              source={{ uri: item.imageUrl }}
               style={{ height: 135, width: 135 }}
             />
           </View>
@@ -111,6 +131,6 @@ export const ItemComponent = ({
           </View>
         </View>
       )}
-    </>
+    </Animated.View>
   );
 };

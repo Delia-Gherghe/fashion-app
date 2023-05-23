@@ -1,7 +1,13 @@
 import type { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { RootStackParamList } from "../../utils/types";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { TouchableOpacity, View, Text } from "react-native";
+import {
+  TouchableOpacity,
+  View,
+  Text,
+  useAnimatedValue,
+  Animated,
+} from "react-native";
 import { useThemeConsumer } from "../../utils/theme/theme.consumer";
 import {
   blueColors,
@@ -10,6 +16,7 @@ import {
 } from "../../utils/theme/colors";
 import { themeChangeStyles } from "./themechange.styles";
 import Ionicons from "@expo/vector-icons/Ionicons";
+import { useEffect } from "react";
 
 type ThemeProps = NativeStackScreenProps<RootStackParamList, "Theme">;
 
@@ -18,6 +25,48 @@ export const ThemeChange = ({ navigation }: ThemeProps) => {
     changeTheme,
     theme: { colors },
   } = useThemeConsumer();
+
+  const rotateBlue = useAnimatedValue(0);
+  const rotateGreen = useAnimatedValue(0);
+  const rotatePurple = useAnimatedValue(0);
+
+  const handleBlueAnimation = () => {
+    Animated.timing(rotateBlue, {
+      toValue: 1,
+      useNativeDriver: true,
+      duration: 600,
+    }).start(() => {
+      rotateBlue.setValue(0);
+    });
+  };
+
+  const handleGreenAnimation = () => {
+    Animated.timing(rotateGreen, {
+      toValue: 1,
+      useNativeDriver: true,
+      delay: 400,
+      duration: 600,
+    }).start(() => {
+      rotateGreen.setValue(0);
+    });
+  };
+
+  const handlePurpleAnimation = () => {
+    Animated.timing(rotatePurple, {
+      toValue: 1,
+      useNativeDriver: true,
+      delay: 1000,
+      duration: 600,
+    }).start(() => {
+      rotatePurple.setValue(0);
+    });
+  };
+
+  useEffect(() => {
+    handleBlueAnimation();
+    handleGreenAnimation();
+    handlePurpleAnimation();
+  }, []);
 
   const styles = themeChangeStyles();
   return (
@@ -45,61 +94,102 @@ export const ThemeChange = ({ navigation }: ThemeProps) => {
           Pick your favorite color!
         </Text>
         <View style={{ alignItems: "center", marginTop: 20 }}>
-          <TouchableOpacity
-            style={[{ backgroundColor: blueColors.medium }, styles.button]}
-            onPress={() => changeTheme("blue")}
+          <Animated.View
+            style={{
+              transform: [
+                {
+                  rotate: rotateBlue.interpolate({
+                    inputRange: [0, 1],
+                    outputRange: ["0deg", "360deg"],
+                  }),
+                },
+              ],
+            }}
           >
-            <Text
+            <TouchableOpacity
+              style={[{ backgroundColor: blueColors.medium }, styles.button]}
+              onPress={() => changeTheme("blue")}
+            >
+              <Text
+                style={[
+                  {
+                    color: blueColors.textMedium,
+                  },
+                  styles.text,
+                ]}
+              >
+                Blue
+              </Text>
+            </TouchableOpacity>
+          </Animated.View>
+
+          <Animated.View
+            style={{
+              transform: [
+                {
+                  rotate: rotateGreen.interpolate({
+                    inputRange: [0, 1],
+                    outputRange: ["0deg", "360deg"],
+                  }),
+                },
+              ],
+            }}
+          >
+            <TouchableOpacity
               style={[
                 {
-                  color: blueColors.textMedium,
+                  backgroundColor: greenColors.medium,
                 },
-                styles.text,
+                styles.button,
               ]}
+              onPress={() => changeTheme("green")}
             >
-              Blue
-            </Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={[
-              {
-                backgroundColor: greenColors.medium,
-              },
-              styles.button,
-            ]}
-            onPress={() => changeTheme("green")}
+              <Text
+                style={[
+                  {
+                    color: greenColors.textMedium,
+                  },
+                  styles.text,
+                ]}
+              >
+                Green
+              </Text>
+            </TouchableOpacity>
+          </Animated.View>
+
+          <Animated.View
+            style={{
+              transform: [
+                {
+                  rotate: rotatePurple.interpolate({
+                    inputRange: [0, 1],
+                    outputRange: ["0deg", "360deg"],
+                  }),
+                },
+              ],
+            }}
           >
-            <Text
+            <TouchableOpacity
               style={[
                 {
-                  color: greenColors.textMedium,
+                  backgroundColor: purpleColors.medium,
                 },
-                styles.text,
+                styles.button,
               ]}
+              onPress={() => changeTheme("purple")}
             >
-              Green
-            </Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={[
-              {
-                backgroundColor: purpleColors.medium,
-              },
-              styles.button,
-            ]}
-            onPress={() => changeTheme("purple")}
-          >
-            <Text
-              style={[
-                {
-                  color: purpleColors.textMedium,
-                },
-                styles.text,
-              ]}
-            >
-              Purple
-            </Text>
-          </TouchableOpacity>
+              <Text
+                style={[
+                  {
+                    color: purpleColors.textMedium,
+                  },
+                  styles.text,
+                ]}
+              >
+                Purple
+              </Text>
+            </TouchableOpacity>
+          </Animated.View>
         </View>
       </View>
     </SafeAreaView>

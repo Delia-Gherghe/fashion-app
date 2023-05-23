@@ -77,7 +77,9 @@ export const Items = ({ route, navigation }: ItemsProps) => {
           }}
         >
           <TouchableOpacity
-            onPress={() => navigation.navigate("Basket")}
+            onPress={() =>
+              navigation.navigate("Basket", { brandName: items[0].brand.name })
+            }
             style={{
               backgroundColor: colors.medium,
               marginHorizontal: 15,
@@ -163,7 +165,15 @@ export const Items = ({ route, navigation }: ItemsProps) => {
             backgroundColor: colors.light,
           }}
         >
-          <Pressable style={{ flexDirection: "row" }}>
+          <Pressable
+            style={{ flexDirection: "row" }}
+            onPress={() =>
+              navigation.navigate("Reviews", {
+                brandId: brandId,
+                brandName: brand?.name,
+              })
+            }
+          >
             <Ionicons name={"star"} size={25} color={colors.dark} />
             <Text
               style={{ fontSize: 18, marginLeft: 5, color: colors.textLight }}
@@ -209,15 +219,8 @@ export const Items = ({ route, navigation }: ItemsProps) => {
 
         <FlatList
           data={items}
-          renderItem={({ item }) => (
-            <ItemComponent
-              id={item.id}
-              name={item.name}
-              description={item.description}
-              price={item.price}
-              imageUrl={item.imageUrl}
-              brand={item.brand}
-            />
+          renderItem={({ item, index }) => (
+            <ItemComponent item={item} index={index} />
           )}
           contentContainerStyle={{ paddingBottom: 80 }}
         />

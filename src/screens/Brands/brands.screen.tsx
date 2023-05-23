@@ -41,24 +41,31 @@ export const Brands = ({ navigation }: BrandsProps) => {
     <SafeAreaView style={{ flex: 1 }}>
       <View
         style={{
-          padding: 10,
           flexDirection: "row",
-          justifyContent: "space-between",
+          padding: 10,
           borderBottomColor: colors.medium,
           borderBottomWidth: 3,
         }}
       >
-        <Ionicons
-          onPress={() => navigation.goBack()}
-          name={"arrow-back-outline"}
-          size={35}
-          color={colors.dark}
-        />
-        <Text
-          style={{ fontSize: 30, fontFamily: "Roboto", marginRight: "36%" }}
+        <View style={{ width: "15%" }}>
+          <Ionicons
+            onPress={() => navigation.goBack()}
+            name={"arrow-back-outline"}
+            size={35}
+            color={colors.dark}
+          />
+        </View>
+
+        <View
+          style={{
+            width: "70%",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
         >
-          Brands
-        </Text>
+          <Text style={{ fontSize: 30 }}>Brands</Text>
+        </View>
+        <View style={{ width: "15%" }}></View>
       </View>
       {error && (
         <View style={{ padding: 10, alignItems: "center" }}>
