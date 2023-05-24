@@ -24,6 +24,13 @@ export const Home = ({ navigation }: HomeProps) => {
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <View
+        style={{ justifyContent: "center", alignItems: "center", padding: 5 }}
+      >
+        <Text style={{ fontSize: 26, fontWeight: "bold", fontStyle: "italic" }}>
+          YouFashion
+        </Text>
+      </View>
+      <View
         style={{
           alignItems: "center",
           flex: 1,

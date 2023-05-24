@@ -188,8 +188,9 @@ export const Basket = ({ route, navigation }: BasketProps) => {
                 marginTop: 15,
               }}
               onPress={() => {
+                const brandName = items[0].brand.name;
                 dispatch(clearBasket());
-                navigation.navigate("Order");
+                navigation.navigate("Order", { brandName: brandName });
               }}
             >
               <Text

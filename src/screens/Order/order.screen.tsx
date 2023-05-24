@@ -5,20 +5,42 @@ import {
   TouchableOpacity,
   Image,
   ActivityIndicator,
+  Share,
 } from "react-native";
 import type { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { RootStackParamList } from "../../utils/types";
 import { useThemeConsumer } from "../../utils/theme/theme.consumer";
 import { useState, useEffect } from "react";
+import Ionicons from "@expo/vector-icons/Ionicons";
 
 type OrderProps = NativeStackScreenProps<RootStackParamList, "Order">;
 
-export const Order = ({ navigation }: OrderProps) => {
+export const Order = ({ route, navigation }: OrderProps) => {
   const {
     theme: { colors },
   } = useThemeConsumer();
 
+  const { brandName } = route.params;
+
   const [isProcessed, setIsProcessed] = useState(false);
+
+  const share = async () => {
+    const options = {
+      message: `I've just made an order from ${brandName} through YouFashion!`,
+    };
+
+    try {
+      const result = await Share.share(options);
+      if (result.action === Share.sharedAction) {
+        if (result.activityType) {
+        } else {
+        }
+      } else if (result.action === Share.dismissedAction) {
+      }
+    } catch (error: any) {
+      console.log(error.message);
+    }
+  };
 
   useEffect(() => {
     setTimeout(() => {
@@ -97,6 +119,24 @@ export const Order = ({ navigation }: OrderProps) => {
             onPress={() => navigation.navigate("Home")}
           >
             <Text style={{ fontSize: 20, color: colors.dark }}>Home</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={{
+              flexDirection: "row",
+              marginTop: 30,
+              backgroundColor: colors.textMedium,
+              width: 150,
+              borderRadius: 20,
+              justifyContent: "center",
+              alignItems: "center",
+              height: 40,
+            }}
+            onPress={share}
+          >
+            <Text style={{ fontSize: 20, color: colors.dark, marginRight: 6 }}>
+              Share
+            </Text>
+            <Ionicons name={"share-social"} color={colors.dark} size={25} />
           </TouchableOpacity>
         </View>
       )}
